@@ -2,7 +2,7 @@
 
 #include <string>
 #include "piece_type.hpp"
-class Move;
+#include "move.hpp"
 
 
 /**
@@ -16,9 +16,9 @@ protected:
 public:
 
     /**
-     * @brief Destructor that allowes child classes to destruct their own with polymorfism
+     * @brief Destructor that
      */
-    virtual ~IPlayer() = default;
+    virtual ~IPlayer();
 
     /**
      * @brief Get the move player wants to do
