@@ -20,6 +20,18 @@ public:
     Move(int row, int col);
 
     /**
+     * @brief Get the move row
+     * @return row of the move
+     */
+    int get_row();
+
+    /**
+     * @brief Get the move col
+     * @return col of the move
+     */
+    int get_col();
+
+    /**
      * @brief A boolean function that checks if the move is valid.
      * @note Valid by the board size.
      *
