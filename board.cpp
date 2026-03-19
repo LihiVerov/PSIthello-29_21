@@ -13,6 +13,100 @@ bool Board::is_move_in_vector(std::vector<Move> valid_moves, Move move) const
     return false;
 }
 
+bool Board::is_move_valid_at_direction(Move move, PieceType turn, Direction direction) const
+{
+    int add_to_row = 0;
+    int add_to_col = 0;
+
+    switch (direction)
+    {
+    case Direction::UP:
+        add_to_row = -1;
+        break;
+    case Direction::UP_LEFT:
+        add_to_row = -1;
+        add_to_col = -1;
+        break;
+    case Direction::UP_RIGHT:
+        add_to_row = -1;
+        add_to_col = 1;
+        break;
+    case Direction::RIGHT:
+        add_to_col = 1;
+        break;
+    case Direction::LEFT:
+        add_to_col = -1;
+        break;
+    case Direction::DOWN:
+        add_to_row = 1;
+        break;
+    case Direction::DOWN_LEFT:
+        add_to_row = 1;
+        add_to_col = -1;
+        break;
+    case Direction::DOWN_RIGHT:
+        add_to_row = 1;
+        add_to_col = 1;
+        break;
+    }
+    
+    if (add_to_row == 1 && move.get_row() == BOARD_SIZE - 1)
+    {
+        return false;
+    }
+    if (add_to_row == -1 && move.get_row() == 0)
+    {
+        return false;
+    }
+    if (add_to_col == 1 && move.get_col() == BOARD_SIZE - 1)
+    {
+        return false;
+    }
+    if (add_to_col == -1 && move.get_col() == 0)
+    {
+        return false;
+    }
+    
+    
+    if (_cells[move.get_row() + add_to_row][move.get_col() + add_to_col].is_empty() || _cells[move.get_row() + add_to_row][move.get_col() + add_to_col].get_piece() == turn)
+    {
+        return false;
+    }
+    
+    int row = move.get_row() + add_to_row;
+    int col = move.get_col() + add_to_col;
+
+    while (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE)
+    {
+        if (_cells[row][col].is_empty() && (row != move.get_row() || col != move.get_col()))
+        {
+            return false;
+        }
+        if (_cells[row][col].get_piece() == turn)
+        {
+            return true;
+        }
+
+        row += add_to_row;
+        col += add_to_col;
+    }
+    return false;
+}
+
+bool Board::is_move_valid(Move move, PieceType turn) const
+{
+    bool result = false;
+    result = result || is_move_valid_at_direction(move, turn, Direction::UP);
+    result = result || is_move_valid_at_direction(move, turn, Direction::UP_RIGHT);
+    result = result || is_move_valid_at_direction(move, turn, Direction::UP_LEFT);
+    result = result || is_move_valid_at_direction(move, turn, Direction::LEFT);
+    result = result || is_move_valid_at_direction(move, turn, Direction::RIGHT);
+    result = result || is_move_valid_at_direction(move, turn, Direction::DOWN);
+    result = result || is_move_valid_at_direction(move, turn, Direction::DOWN_RIGHT);
+    result = result || is_move_valid_at_direction(move, turn, Direction::DOWN_LEFT);
+    return result;
+}
+
 Board::Board()
 {
     for (int i = 0; i < BOARD_SIZE; i++)
@@ -60,7 +154,7 @@ void Board::print_board(PieceType turn) const
             {
                 std::cout << "* ";
             }
-            if (_cells[i][j].get_piece() == PieceType::WHITE)
+            else if (_cells[i][j].get_piece() == PieceType::WHITE)
             {
                 std::cout << "O ";
             }
@@ -77,3 +171,31 @@ void Board::print_board(PieceType turn) const
     }
 }
 
+std::vector<Move> Board::get_valid_moves(PieceType turn) const
+{
+    std::vector<Move> valid_moves;
+    for (int i = 0; i < BOARD_SIZE; i++)
+    {
+        for (int j = 0; j < BOARD_SIZE; j++)
+        {
+            if (_cells[i][j].is_empty())
+            {
+                Move curr_move = Move(i, j);
+                if (is_move_valid(curr_move, turn))
+                {
+                    valid_moves.push_back(curr_move);
+                }
+            }
+        }
+    }
+    return valid_moves;
+}
+
+void print_vector(std::vector<Move> valid_moves)
+{
+    std::cout << "Valid moves: " << std::endl;
+    for (auto& it : valid_moves)
+    {
+        std::cout << it.get_row() << " " << it.get_col() << std::endl;
+    }
+}
