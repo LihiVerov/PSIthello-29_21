@@ -1,7 +1,7 @@
 #include "board.hpp"
 #include <iostream>
 
-bool Board::is_move_in_vector(std::vector<Move> valid_moves, Move move) const
+bool Board::is_move_in_vector(const std::vector<Move>& valid_moves, Move move) const
 {
     for (auto& curr_move : valid_moves)
     {
@@ -13,7 +13,7 @@ bool Board::is_move_in_vector(std::vector<Move> valid_moves, Move move) const
     return false;
 }
 
-bool Board::is_move_valid_at_direction(Move move, PieceType turn, Direction direction) const
+bool Board::is_move_valid_at_direction(const Move& move, PieceType turn, Direction direction) const
 {
     int add_to_row = 0;
     int add_to_col = 0;
@@ -93,7 +93,7 @@ bool Board::is_move_valid_at_direction(Move move, PieceType turn, Direction dire
     return false;
 }
 
-bool Board::is_move_valid(Move move, PieceType turn) const
+bool Board::is_move_valid(const Move& move, PieceType turn) const
 {
     bool result = false;
     result = result || is_move_valid_at_direction(move, turn, Direction::UP);
@@ -191,11 +191,79 @@ std::vector<Move> Board::get_valid_moves(PieceType turn) const
     return valid_moves;
 }
 
-void print_vector(std::vector<Move> valid_moves)
+void Board::place_piece(const Move& move, PieceType turn)
 {
-    std::cout << "Valid moves: " << std::endl;
-    for (auto& it : valid_moves)
+    if (!is_move_valid(move, turn))
     {
-        std::cout << it.get_row() << " " << it.get_col() << std::endl;
+        return; // do nothing, other functions supposed to make share it won't happen
     }
+    int add_to_row = 0;
+    int add_to_col = 0;
+    if (is_move_valid_at_direction(move, turn, Direction::UP))
+    {
+        add_to_row = -1;
+    }
+    else if (is_move_valid_at_direction(move, turn, Direction::UP_RIGHT))
+    {
+        add_to_row = -1;
+        add_to_col = 1;
+    }
+    else if (is_move_valid_at_direction(move, turn, Direction::UP_LEFT))
+    {
+        add_to_row = -1;
+        add_to_col = -1;
+    }
+    else if (is_move_valid_at_direction(move, turn, Direction::LEFT))
+    {
+        add_to_col = -1;
+    }
+    else if (is_move_valid_at_direction(move, turn, Direction::RIGHT))
+    {
+        add_to_col = 1;
+    }
+    else if (is_move_valid_at_direction(move, turn, Direction::DOWN))
+    {
+        add_to_row = 1;
+    }
+    else if (is_move_valid_at_direction(move, turn, Direction::DOWN_RIGHT))
+    {
+        add_to_row = 1;
+        add_to_col = 1;
+    }
+    else if (is_move_valid_at_direction(move, turn, Direction::DOWN_LEFT))
+    {
+        add_to_row = 1;
+        add_to_col = -1;
+    }
+
+    int row = move.get_row();
+    int col = move.get_col();
+    PieceType not_turn = PieceType::BLACK;
+    if (turn == PieceType::BLACK)
+    {
+        not_turn = PieceType::WHITE;
+    }
+
+    _cells[row][col].set_piece(not_turn);
+    while (_cells[row][col].get_piece() != turn)
+    {
+        if (_cells[row][col].get_piece() == not_turn)
+        {
+            _cells[row][col].set_piece(turn);
+        }
+
+        row += add_to_row;
+        col += add_to_col;
+    }
+}
+
+int main()
+{
+    Board board = Board();
+
+    board.print_board(PieceType::BLACK);
+    board.place_piece(Move(2, 3), PieceType::BLACK);
+    board.print_board(PieceType::BLACK);
+
+    return 0;
 }

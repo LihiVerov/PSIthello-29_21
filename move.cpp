@@ -2,12 +2,12 @@
 
 Move::Move(int row, int col) : _row(row), _col(col) {}
 
-int Move::get_row()
+int Move::get_row() const
 {
     return _row;
 }
 
-int Move::get_col()
+int Move::get_col() const
 {
     return _col;
 }

@@ -21,7 +21,7 @@ private:
      * @param move Move to check if in vector
      * @return true if move is in vector and false if not
      */
-    bool is_move_in_vector(std::vector<Move> valid_moves, Move move) const;
+    bool is_move_in_vector(const std::vector<Move>& valid_moves, Move move) const;
 
     /**
      * @brief Checks if move is valid on a certain direction
@@ -30,7 +30,7 @@ private:
      * @param direction the direction to check move in
      * @return true if move can be done on this direction or false if not
      */
-    bool is_move_valid_at_direction(Move move, PieceType turn, Direction direction) const;
+    bool is_move_valid_at_direction(const Move& move, PieceType turn, Direction direction) const;
 
     /**
      * @brief Checks if move is valid
@@ -38,7 +38,7 @@ private:
      * @param turn the turn to check if move is valid in
      * @return true if move is valid
      */
-    bool is_move_valid(Move move, PieceType turn) const;
+    bool is_move_valid(const Move& move, PieceType turn) const;
 
 public:
 
@@ -58,4 +58,11 @@ public:
      * @param turn The current player turn (black or white)
      */
     std::vector<Move> get_valid_moves(PieceType turn) const;
+
+    /**
+     * @brief Place a piece on board and flip the relevant pieces
+     * @param move The move to place piece on board with
+     * @param turn The turn of the current player (black or white)
+     */
+    void place_piece(const Move& move, PieceType turn);
 };
