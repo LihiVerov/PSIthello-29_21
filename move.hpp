@@ -25,5 +25,5 @@ public:
      *
      * @return True if valid, otherwise, false.
      */
-    bool is_valid();
+    bool is_valid() const;
 };
