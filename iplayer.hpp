@@ -14,9 +14,15 @@ protected:
     std::string _name;
     PieceType _symbol;
 public:
+
+    /**
+     * @brief Destructor that allowes child classes to destruct their own with polymorfism
+     */
+    virtual ~IPlayer() = default;
+
     /**
      * @brief Get the move player wants to do
      * @return The move player wants to do
      */
-    virtual Move get_move() = 0;
+    virtual Move get_move() const = 0;
 };
