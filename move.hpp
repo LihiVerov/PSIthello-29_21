@@ -23,13 +23,13 @@ public:
      * @brief Get the move row
      * @return row of the move
      */
-    int get_row();
+    int get_row() const;
 
     /**
      * @brief Get the move col
      * @return col of the move
      */
-    int get_col();
+    int get_col() const;
 
     /**
      * @brief A boolean function that checks if the move is valid.
